@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Pokemon Tournament</title>
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+  <div id="admin-app">
+
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="admin-title">⚙ ADMIN PANEL</div>
+      <div class="admin-actions">
+        <button id="btn-export" class="btn-gray-sm">Export JSON</button>
+        <button id="btn-import" class="btn-gray-sm">Import JSON</button>
+        <button id="btn-save" class="btn-gold-sm">SAVE</button>
+        <a href="index.html" class="btn-link-sm">← GAME</a>
+      </div>
+    </div>
+
+    <!-- Main tabs -->
+    <div class="main-tabs">
+      <button class="main-tab active" data-tab="wild">WILD POKÉMON</button>
+      <button class="main-tab" data-tab="moves">MOVES</button>
+      <button class="main-tab" data-tab="pokemon">POKÉMON</button>
+    </div>
+
+    <!-- ── WILD POKÉMON PANEL ── -->
+    <div class="admin-panel" id="panel-wild">
+      <div class="floor-tabs">
+        <button class="floor-tab active" data-floor="1">FLOOR 1</button>
+        <button class="floor-tab" data-floor="2">FLOOR 2</button>
+        <button class="floor-tab" data-floor="3">FLOOR 3</button>
+        <button class="floor-tab" data-floor="4">FLOOR 4</button>
+      </div>
+
+      <div class="floor-settings" id="floor-settings"></div>
+
+      <div class="poke-search-bar">
+        <input type="text" id="poke-search" placeholder="+ Add Pokémon (type name or #number)..." autocomplete="off" />
+        <div class="search-results hidden" id="search-results"></div>
+      </div>
+
+      <div class="wild-content-scroll">
+        <div class="poke-table-wrap">
+          <table class="poke-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th></th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Weight</th>
+                <th>Moves</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="poke-tbody"></tbody>
+          </table>
+        </div>
+        <div id="boss-section"></div>
+      </div>
+    </div>
+
+    <!-- ── MOVES PANEL ── -->
+    <div class="admin-panel hidden" id="panel-moves">
+      <div class="moves-toolbar">
+        <button id="btn-add-move" class="btn-gold-sm">+ NEW MOVE</button>
+        <span class="moves-hint">Click cells in the hitmap to toggle. Rightmost column = toward enemy.</span>
+      </div>
+      <div class="moves-table-wrap">
+        <table class="moves-table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Cat</th>
+              <th>Power</th>
+              <th>EN</th>
+              <th>Extra</th>
+              <th>Hitmap <span class="hm-legend">← bk | ATK | fw→</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="moves-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- ── POKÉMON PANEL ── -->
+    <div class="admin-panel hidden" id="panel-pokemon">
+      <div class="poke-toolbar">
+        <span class="poke-toolbar-hint">Configure default moves and level-up moves for each Pokémon</span>
+      </div>
+      <div class="poke-cfg-layout">
+        <!-- Left: list -->
+        <div class="poke-cfg-list-col">
+          <input type="text" id="pk-search" placeholder="Search Pokémon..." autocomplete="off" />
+          <div id="pk-list" class="pk-list"></div>
+        </div>
+        <!-- Right: config -->
+        <div class="poke-cfg-detail" id="poke-cfg-detail">
+          <div class="no-sel-hint">← Select a Pokémon to configure</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast"></div>
+
+  <script src="js/data/animdata.js?v=018"></script>
+  <script src="js/sprite.js?v=018"></script>
+  <script src="js/data/types.js?v=018"></script>
+  <script src="js/data/moves.js?v=020"></script>
+  <script src="js/data/pokedex.js?v=022"></script>
+  <script src="js/data/gameconfig.js?v=001"></script>
+  <script src="js/admin.js?v=024"></script>
+</body>
+</html>

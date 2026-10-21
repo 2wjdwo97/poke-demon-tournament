@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokemon Tournament</title>
+  <link rel="stylesheet" href="css/style.css?v=019" />
+</head>
+<body>
+
+  <!-- Shared HUD (shown on card-select & battle screens only) -->
+  <div class="hud" id="shared-hud" style="display:none;">
+    <div class="hud-player hud-left">
+      <div class="hud-portrait" id="js-portrait-player"></div>
+      <div class="hud-stats-wrap">
+        <div class="hud-stats">
+          <div class="hud-name js-player-name">-</div>
+          <div class="stat-row">
+            <span class="stat-label">HP</span>
+            <div class="bar-wrap"><div class="bar dm-bar js-dm-player"></div></div>
+            <span class="stat-val js-dm-player-val">100</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">EN</span>
+            <div class="bar-wrap"><div class="bar en-bar js-en-player"></div></div>
+            <span class="stat-val js-en-player-val">100</span>
+          </div>
+        </div>
+        <div class="exp-row-outer">
+          <span class="stat-label exp-label">EXP</span>
+          <div class="bar-wrap exp-bar-wrap"><div class="bar exp-bar js-exp-player"></div></div>
+          <span class="stat-val js-exp-player-val" style="font-size:0.52rem;color:#ffcc00;min-width:36px;">0/60</span>
+        </div>
+      </div>
+    </div>
+    <div class="hud-center">
+      <div class="round-badge">ROUND <span class="js-round">1</span></div>
+    </div>
+    <div class="hud-player hud-right">
+      <div class="hud-stats">
+        <div class="hud-name js-ai-name">-</div>
+        <div class="stat-row">
+          <span class="stat-label">HP</span>
+          <div class="bar-wrap"><div class="bar dm-bar js-dm-ai"></div></div>
+          <span class="stat-val js-dm-ai-val">100</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">EN</span>
+          <div class="bar-wrap"><div class="bar en-bar js-en-ai"></div></div>
+          <span class="stat-val js-en-ai-val">100</span>
+        </div>
+      </div>
+      <div class="hud-portrait" id="js-portrait-ai"></div>
+    </div>
+  </div>
+
+  <!-- Title Screen -->
+  <div class="screen" id="screen-title">
+    <div class="title-logo">
+      <div class="title-main">Pokemon</div>
+      <div class="title-sub">Tournament</div>
+    </div>
+    <button class="btn-gold" id="btn-play">NEW GAME</button>
+    <button class="btn-gray" id="btn-resume" style="display:none;margin-top:10px;">CONTINUE</button>
+  </div>
+
+  <!-- Pokédex Select Screen -->
+  <div class="screen" id="screen-starter">
+    <div class="starter-left">
+      <div class="dex-header">
+        <div class="dex-title">SELECT YOUR PARTNER</div>
+        <div class="dex-tabs">
+          <button class="dex-tab active" id="dex-tab-1">GEN I</button>
+          <button class="dex-tab" id="dex-tab-2">GEN II</button>
+        </div>
+      </div>
+      <div class="dex-scroll" id="dex-scroll">
+        <div class="dex-grid" id="dex-grid"></div>
+      </div>
+    </div>
+    <div class="starter-right" id="dex-info-panel">
+      <div class="dex-info-placeholder">← 포켓몬을 선택하세요</div>
+    </div>
+  </div>
+
+  <!-- Map Screen -->
+  <div class="screen" id="screen-map">
+    <div class="map-header">
+      <div class="map-floor-label">FLOOR <span id="map-floor-num">1</span></div>
+      <div class="map-header-hint">CLICK A ROOM TO ENTER</div>
+      <div class="map-money-label">₽<span id="map-money">0</span></div>
+      <div class="map-money-label">&#9679;<span id="map-balls">3</span> Ball</div>
+      <button class="btn-red map-hdr-btn" id="btn-forfeit">FORFEIT</button>
+    </div>
+    <div class="map-explore-wrap">
+      <div class="map-explore-area" id="map-explore-area"></div>
+    </div>
+    <div class="map-team-strip" id="map-team-strip"></div>
+  </div>
+
+  <!-- Card Select Screen -->
+  <div class="screen" id="screen-card-select">
+    <div class="card-grid-wrap">
+      <div class="card-grid" id="card-grid"></div>
+      <!-- cycle-016: MOVE/SWAP 구역을 card-grid-wrap 하단으로 이동 -->
+      <div id="card-bottom-zone">
+        <div id="move-card-zone">
+          <div class="move-slot" data-dir="UP"></div>
+          <div class="move-slot" data-dir="DOWN"></div>
+          <div class="move-slot" data-dir="LEFT"></div>
+          <div class="move-slot" data-dir="RIGHT"></div>
+        </div>
+        <div id="swap-card-zone"><!-- SWAP 구역 (JS로 렌더링) --></div>
+      </div>
+    </div>
+    <div id="slot-area">
+      <div id="slot-main-row">
+        <div id="slot-main-row">
+          <div id="selected-slots">
+            <div class="selected-slot empty-slot" id="slot-0" data-slot="0"></div>
+            <div class="selected-slot empty-slot" id="slot-1" data-slot="1"></div>
+            <div class="selected-slot empty-slot" id="slot-2" data-slot="2"></div>
+          </div>
+          <div id="slot-actions">
+            <button class="btn-gold" id="btn-continue" disabled>GO-!</button>
+          </div>
+        </div>
+        <div id="field-mini-grid">
+          <div class="mini-grid-label">FIELD</div>
+          <div class="mini-grid" id="mini-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Battle Screen -->
+  <div class="screen" id="screen-battle">
+    <div class="battle-main">
+      <div class="arena" id="arena">
+        <div class="arena-bg"></div>
+        <div class="grid-field" id="grid-field"></div>
+        <div class="char-overlay" id="char-overlay">
+          <canvas class="char-canvas char-player" id="char-player"></canvas>
+          <canvas class="char-canvas char-ai" id="char-ai"></canvas>
+        </div>
+        <div class="damage-popup" id="damage-popup"></div>
+      </div>
+    </div>
+    <div class="battle-cards-row">
+      <div class="battle-card-slot" id="battle-player-card"></div>
+      <div class="battle-vs-divider">&#9654;</div>
+      <div class="battle-card-slot" id="battle-ai-card"></div>
+    </div>
+  </div>
+
+  <!-- Catch Screen (after winning a wild battle) -->
+  <div class="screen" id="screen-catch">
+    <div class="catch-header">BATTLE WON!</div>
+    <div class="catch-body">
+      <div class="catch-portrait" id="catch-portrait"></div>
+      <div class="catch-info">
+        <div class="catch-name" id="catch-name"></div>
+        <div class="catch-types" id="catch-types"></div>
+        <div class="catch-rewards" id="catch-rewards"></div>
+      </div>
+    </div>
+    <div class="catch-buttons">
+      <button class="btn-gold" id="btn-catch">CATCH!</button>
+      <button class="btn-gray" id="btn-skip-catch">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- Evolution Screen -->
+  <div class="screen" id="screen-evo">
+    <div class="evo-title">EVOLUTION!</div>
+    <div class="evo-stage">
+      <div class="evo-poke">
+        <canvas id="evo-from-sprite" width="80" height="80"></canvas>
+        <div class="evo-poke-name" id="evo-from-name"></div>
+      </div>
+      <div class="evo-arrow-big">→</div>
+      <div class="evo-poke">
+        <canvas id="evo-to-sprite" width="80" height="80"></canvas>
+        <div class="evo-poke-name" id="evo-to-name"></div>
+      </div>
+    </div>
+    <div class="evo-msg" id="evo-msg"></div>
+    <div class="evo-buttons">
+      <button class="btn-gold" id="btn-evo-yes">EVOLVE</button>
+      <button class="btn-gray" id="btn-evo-no">CANCEL</button>
+    </div>
+  </div>
+
+  <!-- Learn Move Screen -->
+  <div class="screen" id="screen-learn-move">
+    <div class="learn-move-title" id="learn-move-pokemon"></div>
+    <div class="learn-move-hint">Choose a move to forget, or skip</div>
+    <div class="learn-move-new">
+      <div class="learn-move-label">NEW MOVE</div>
+      <div id="learn-move-new-card" class="learn-move-new-card"></div>
+    </div>
+    <div class="learn-move-arrow">↕ swap with one of your current moves</div>
+    <div id="learn-move-current-list" class="learn-move-current-list"></div>
+    <button class="btn-gray" id="btn-learn-move-skip">DON'T LEARN</button>
+  </div>
+
+  <!-- Release Screen -->
+  <div class="screen" id="screen-release">
+    <div class="release-title">PARTY FULL!</div>
+    <div class="release-hint">Choose a Pokémon to release</div>
+    <div class="release-list" id="release-list"></div>
+  </div>
+
+  <!-- Event Screen (treasure / shop / center) -->
+  <div class="screen" id="screen-event">
+    <div class="event-icon" id="event-icon"></div>
+    <div class="event-title" id="event-title"></div>
+    <div class="event-body" id="event-body"></div>
+    <div class="event-buttons" id="event-buttons"></div>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div class="screen" id="screen-gameover">
+    <div class="gameover-text">GAME OVER</div>
+    <div class="gameover-sub" id="gameover-sub">All your Pokémon fainted!</div>
+    <button class="btn-gold" id="btn-gameover-restart">PLAY AGAIN</button>
+  </div>
+
+  <!-- Victory Screen -->
+  <div class="screen" id="screen-victory">
+    <div class="result-text" style="color:#ffcc00;">YOU WIN!</div>
+    <div class="victory-sub">Champion of the Pokemon Tournament!</div>
+    <button class="btn-gold" id="btn-victory-restart">PLAY AGAIN</button>
+  </div>
+
+  <!-- Card Reveal Flip Overlay -->
+  <div class="card-reveal-overlay" id="card-reveal-overlay">
+    <div class="reveal-inner">
+      <div class="reveal-card-wrap flip-card" id="reveal-player-wrap">
+        <div class="flip-card-inner">
+          <div class="flip-card-back">
+            <img src="assets/nls8m8xd3uxd1.png" class="card-back-img" alt="card back" />
+          </div>
+          <div class="flip-card-front" id="reveal-player-card-content"></div>
+        </div>
+      </div>
+      <div class="reveal-vs">VS</div>
+      <div class="reveal-card-wrap flip-card" id="reveal-ai-wrap">
+        <div class="flip-card-inner">
+          <div class="flip-card-back">
+            <img src="assets/nls8m8xd3uxd1.png" class="card-back-img" alt="card back" />
+          </div>
+          <div class="flip-card-front" id="reveal-ai-card-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 설정 버튼 (우측 상단 고정) -->
+  <button id="btn-settings" title="Settings">⚙</button>
+  <div id="settings-panel" style="display:none;">
+    <div class="settings-row">
+      <label for="settings-volume-slider">Volume</label>
+      <input type="range" id="settings-volume-slider" min="0" max="100" value="80" />
+      <span id="settings-volume-val">80%</span>
+    </div>
+    <div class="settings-row">
+      <button id="settings-mute-btn">Mute</button>
+    </div>
+  </div>
+
+  <script src="js/data/animdata.js?v=018"></script>
+  <script src="js/sprite.js?v=018"></script>
+  <script src="js/data/types.js?v=018"></script>
+  <script src="js/data/moves.js?v=020"></script>
+  <script src="js/data/pokedex.js?v=022"></script>
+  <script src="js/data/gameconfig.js?v=001"></script>
+  <script src="js/map.js?v=018"></script>
+  <script src="js/game.js?v=047"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+agents/
+cycles/
+claude-skills/
+scripts/
+state.json
+user-directives.md
+*.jsonl
+*.md
+!src/
+.DS_Store

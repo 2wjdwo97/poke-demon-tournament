@@ -1,0 +1,2573 @@
+/* ============================================================
+   INUYASHA — Demon Tournament
+   style.css  (cycle-002: grid-based battle)
+   ============================================================ */
+
+/* ----- Reset & Base ----- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: uppercase;
+  background: #000;
+  color: #fff;
+}
+
+/* ----- Screens ----- */
+.screen {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+}
+
+/* screens that sit below the fixed HUD */
+#screen-card-select,
+#screen-battle {
+  padding-top: var(--hud-h, 96px);
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   Title Screen
+   ============================================================ */
+#screen-title {
+  background: #1a1228;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.title-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-main {
+  font-size: 4rem;
+  color: #cc3333;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.title-sub {
+  font-size: 2rem;
+  color: #d4b8ff;
+  font-style: italic;
+}
+
+/* ============================================================
+   Shared Buttons
+   ============================================================ */
+.btn-gold {
+  height: max-height;
+  background: #c8a227;
+  color: #1a1228;
+  border: 2px solid #e8c247;
+  padding: 12px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.15em;
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: uppercase;
+  transition: background 0.2s;
+}
+
+.btn-gold:hover {
+  background: #e8c247;
+}
+
+.btn-gold:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-gray {
+  background: #555;
+  color: #fff;
+  border: 2px solid #777;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: uppercase;
+  transition: background 0.2s;
+}
+
+.btn-gray:hover {
+  background: #666;
+}
+
+/* ============================================================
+   VS Screen
+   ============================================================ */
+#screen-vs {
+  background: #0d1a2e;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vs-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 24px 40px;
+  width: 100%;
+}
+
+.vs-name {
+  font-size: 2rem;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.vs-badge {
+  font-size: 3rem;
+  color: #c8a227;
+  font-weight: bold;
+}
+
+.vs-arena {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.vs-arena-plate {
+  font-size: 3rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.2em;
+}
+
+.vs-footer {
+  width: 100%;
+  background: #0a1020;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.portrait-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.portrait {
+  width: 80px;
+  height: 80px;
+  border: 2px solid #555;
+  background: #2a2a3a;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.portrait.selected {
+  border: 3px solid #c8a227;
+}
+
+.portrait.locked {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.portrait-lock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.portrait-name {
+  font-size: 0.6rem;
+  color: #ddd;
+  text-align: center;
+  padding: 4px 2px;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+}
+
+.vs-buttons {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* ============================================================
+   HUD (shared) — 포켓몬 GBA 스타일
+   ============================================================ */
+.hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  min-width: 900px;
+  background: linear-gradient(180deg, #1c2a4a 0%, #111d35 100%);
+  padding: 6px 12px;
+  border-bottom: 3px solid #c8a227;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.hud-player {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* player: [portrait][stats] left-aligned */
+.hud-left  { justify-content: flex-start; }
+/* ai: [stats][portrait] right-aligned — portrait ends up on the far right */
+.hud-right { justify-content: flex-end; }
+
+/* wrapper for stats box + exp bar below */
+.hud-stats-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* EXP row outside the stats box */
+.exp-row-outer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 2px;
+}
+
+/* GBA-style inner panel */
+.hud-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid #3a5a8a;
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+
+.hud-right .hud-stats {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.hud-portrait {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background-color: #1a1a2e;
+  border: 2px solid #3a5a8a;
+  border-radius: 4px;
+  overflow: hidden;
+  /* background-image/position/size set by JS */
+}
+
+.hud-center {
+  text-align: center;
+  color: #c8a227;
+  font-weight: bold;
+  padding: 0 14px;
+  flex-shrink: 0;
+}
+
+.round-badge {
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.hud-name {
+  font-size: 0.82rem;
+  font-weight: bold;
+  color: #e8e8ff;
+  margin-bottom: 1px;
+  letter-spacing: 0.04em;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-label {
+  color: #88aaff;
+  font-size: 0.68rem;
+  font-weight: bold;
+  width: 26px;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+}
+
+/* pill-shaped bar wrap */
+.bar-wrap {
+  width: 180px;
+  height: 12px;
+  background: #0d1828;
+  border: 1px solid #3a5a8a;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* EXP bar is slightly thinner */
+.exp-bar-wrap {
+  width: 180px;
+  height: 9px;
+}
+
+/* pill-shaped bar fill */
+.bar {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.3s, background 0.3s;
+}
+
+/* HP bar — color set dynamically by JS */
+.dm-bar {
+  background: #44cc44;
+  width: 100%;
+}
+
+/* EN bar — blue */
+.en-bar {
+  background: #3399ff;
+  width: 100%;
+}
+
+/* EXP bar — yellow */
+.exp-bar {
+  background: #ffcc00;
+  width: 0%;
+}
+
+.stat-val {
+  color: #e8e8ff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 52px;
+  text-align: right;
+  flex-shrink: 0;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* EXP row outside the stats box */
+.exp-row-outer {
+  margin-top: 2px;
+}
+
+.exp-label {
+  color: #ffcc00;
+}
+
+/* ============================================================
+   Card Select Screen
+   ============================================================ */
+#screen-card-select {
+  background: #2d5a27;
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 900px;
+}
+
+/* cycle-009: 카드 묶음 영역 — 가운데 고정, 반응형 너비 */
+.card-grid-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 42px 50px;
+  min-width: fit-content;
+  max-width: fit-content;
+  align-self: center;
+}
+
+/* cycle-009: flex-wrap 기반 반응형 카드 그리드 */
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-content: start;
+  align-items: flex-start;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* cycle-006: 카드 비율 1:1.4 (aspect-ratio 5/7) — 원작 카드 비율에 맞춤 */
+/* cycle-007: border-radius 6px 추가 — 원작처럼 둥근 모서리 */
+/* cycle-009: 고정 너비 (창 크기와 무관하게 카드 크기 유지) */
+.card {
+  position: relative;
+  background: #1a2a1a;
+  border: 2px solid #4a7a4a;
+  border-radius: 6px;
+  padding: 0;
+  cursor: pointer;
+  aspect-ratio: 5 / 7;
+  flex: 0 0 auto;
+  width: 130px;
+  min-height: unset;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.card:hover {
+  border-color: #c8a227;
+}
+
+.card.dimmed {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* cycle-006: 카드 상단 이미지 영역 */
+/* cycle-007: flex:6 (약 60%) — 원작 기준 상단 이미지 영역 확대 */
+.card-img {
+  flex: 6;
+  background: #0d1d0d;
+  border-bottom: 1px solid #3a5a3a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2a4a2a;
+  font-size: 0.55rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* cycle-006: 카드 하단 정보 영역 */
+/* cycle-007: flex:4 (약 40%) — 카드명·타입·수치 */
+.card-bottom {
+  position:absolute;
+  display: flex;
+  flex-direction: row;
+  bottom: 4px;
+  height: 40px;
+  width: calc(100% - 16px);
+}
+
+.card-name {
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.card-stats {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.card-type {
+  color: #c8a227;
+  font-size: 0.6rem;
+  font-weight: bold;
+}
+
+.card-dm {
+  color: #ff6666;
+  font-size: 0.6rem;
+  margin-left: 3px;
+}
+
+.card-en {
+  color: #66ff66;
+  font-size: 0.6rem;
+  margin-left: 3px;
+}
+
+.card-move {
+  color: #88ddff;
+  font-size: 0.6rem;
+  margin-left: 3px;
+}
+
+.slot-area {
+  background: #c8b88a;
+  padding: 10px 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-shrink: 0;
+  height: 150px;
+}
+
+.slots {
+  display: flex;
+  gap: 12px;
+}
+
+.slot {
+  width: 120px;
+  height: 120px;
+  border: 2px dashed #888;
+  background: #ddd8c4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+.slot.filled {
+  border: 2px solid #c8a227;
+  background: #e8d8a0;
+  cursor: pointer;
+}
+
+.slot.filled:hover {
+  border-color: #ff4444;
+  background: #f8d0a0;
+}
+
+.slot-num {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: bold;
+}
+
+.slot-label {
+  font-size: 0.6rem;
+  color: #888;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.slot-card-name {
+  font-size: 0.65rem;
+  color: #333;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.slot-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  height: -webkit-fill-available;
+}
+
+.slot-hint {
+  font-size: 0.7rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+#btn-continue:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   Task 5: Mini grid (card select screen)
+   ============================================================ */
+.mini-grid-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.mini-grid-label {
+  font-size: 1.0rem;
+  color: #555;
+  font-weight: bold;
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 67px);
+  grid-template-rows: repeat(3, 52px);
+}
+
+.mini-cell {
+  width: 65px;
+  height: 50px;
+  background: #c0b090;
+  border: 1px solid #888;
+}
+
+.mini-cell.cell-player {
+  background: #4499ff;
+}
+
+.mini-cell.cell-ai {
+  background: #ff5544;
+}
+
+/* ============================================================
+   Battle Screen
+   ============================================================ */
+#screen-battle {
+  background: #0d1a10;
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* cycle-004 Task 2/3: battle-main wraps arena + history panel (row direction) */
+.battle-main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.arena {
+  flex: 1;
+  min-width: 0;
+  background: #1a3020;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.arena-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #1a3a20 0%, #0a2015 50%, #0a1a10 100%);
+  z-index: 0;
+}
+
+/* ============================================================
+   Task 4: Grid field (battle arena)
+   ============================================================ */
+.grid-field {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* cycle-008: 격자 선 강화 — rgba(255,255,255,0.45) 으로 명확하게 */
+.grid-cell {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: transparent;
+  position: relative;
+  background: rgba(0, 0, 0, 0.12);
+  transition: background 0.15s;
+}
+
+.grid-cell.cell-player {
+  background: rgba(40, 100, 220, 0.45);
+  color: #88ccff;
+  font-size: 1.6rem;
+}
+
+.grid-cell.cell-ai {
+  background: rgba(200, 50, 50, 0.45);
+  color: #ffaaaa;
+  font-size: 1.6rem;
+}
+
+.grid-cell.cell-hit {
+  background: rgba(255, 80, 0, 0.65) !important;
+  border-color: #ff4400 !important;
+  color: transparent;
+}
+
+/* ============================================================
+   Damage popup
+   ============================================================ */
+.damage-popup {
+  position: absolute;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ff3333;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  transition: opacity 0.3s, transform 0.3s;
+  transform: scale(1);
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+}
+
+.damage-popup.visible {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.2);
+}
+
+/* ── Sprite float-up damage/heal popup ─────────────────────── */
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+}
+
+.sprite-popup {
+  position: absolute;
+  font-size: 1.1rem;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  text-shadow: 0 0 4px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.8);
+  pointer-events: none;
+  transform: translateX(-50%);
+  animation: floatUp 1s ease-out forwards;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+.sprite-popup.dmg  { color: #ff4444; }
+.sprite-popup.heal { color: #44ee44; }
+
+/* ============================================================
+   Battle card row (cycle-004 Task 3: 하단 고정, 높이 130px)
+   ============================================================ */
+.battle-cards-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 16px;
+  background: #1a1010;
+  flex-shrink: 0;
+  height: 230px;
+  border-top: 2px solid #c8a227;
+}
+
+.battle-card-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+
+.battle-card-slot .card-item {
+  transform: scale(0.85);
+  transform-origin: top center;
+}
+
+.battle-card-slot.active .card-item {
+  border-color: #c8a227;
+}
+
+.battle-card-label {
+  font-size: 0.65rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.battle-card-name {
+  font-size: 1rem;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.battle-card-stats {
+  font-size: 0.7rem;
+  color: #c8a227;
+  margin-top: 4px;
+}
+
+.battle-vs-divider {
+  font-size: 2rem;
+  color: #c8a227;
+}
+
+/* ============================================================
+   cycle-003: Card hitmap mini-grid (shared: card select & battle)
+   ============================================================ */
+.card-hitmap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 9px);
+  grid-template-rows: repeat(3, 9px);
+  gap: 1px;
+  margin: 3px auto 0;
+}
+
+.card-hitmap-cell {
+  width: 9px;
+  height: 9px;
+  border-radius: 1px;
+  background: #333333;
+}
+
+.hitmap-hit { background: #cc3333; }
+
+/* ============================================================
+   cycle-003: Battle card comparison UI improvements
+   ============================================================ */
+.battle-card-type {
+  font-size: 0.65rem;
+  color: #aaaaaa;
+  margin: 2px 0;
+  letter-spacing: 0.05em;
+}
+
+.battle-card-dm-en {
+  font-size: 0.7rem;
+  color: #ffcc00;
+  margin: 2px 0;
+}
+
+.battle-card-hitmap {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+/* ============================================================
+   cycle-005 Task 3: Character overlay
+   ============================================================ */
+.char-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.char-canvas {
+  position: absolute;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transform: translate(-50%, -50%);
+  transition: left 0.35s ease, top 0.35s ease;
+}
+.no-transition {
+  transition: none !important;
+}
+
+#char-player {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+/* ============================================================
+   cycle-005 Task 5: Card reveal flip animation overlay
+   ============================================================ */
+.card-reveal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-120px); opacity: 0; }
+  to   { transform: translateX(0);      opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(120px);  opacity: 0; }
+  to   { transform: translateX(0);      opacity: 1; }
+}
+
+.card-reveal-overlay.active {
+  display: flex;
+}
+
+.card-reveal-overlay.active #reveal-player-wrap {
+  animation: slide-in-left 0.45s ease-out forwards;
+}
+
+.card-reveal-overlay.active #reveal-ai-wrap {
+  animation: slide-in-right 0.45s ease-out forwards;
+}
+
+.reveal-inner {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  perspective: 1000px;
+}
+
+.reveal-vs {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #c8a227;
+}
+
+.flip-card, .reveal-card-wrap {
+  aspect-ratio: 1080 / 1496;
+  min-width: 132px;
+  position: relative;
+}
+
+@keyframes flip-card-3d {
+  0%   { transform: perspective(500px) rotateY(0deg)   scale(1); }
+  50%  { transform: perspective(500px) rotateY(90deg)  scale(1.25); }
+  100% { transform: perspective(500px) rotateY(180deg) scale(1); }
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.flip-card-inner.flipped {
+  animation: flip-card-3d 0.45s ease forwards;
+}
+
+.flip-card-back,
+.flip-card-front {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-card-back {
+  background: transparent;
+}
+
+.flip-card-front {
+  transform: rotateY(180deg);
+  overflow: visible;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.card-back-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: 6px;
+}
+
+.reveal-card-label {
+  font-size: 0.65rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.reveal-card-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.reveal-card-type {
+  font-size: 0.75rem;
+  color: #c8a227;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Result Screen
+   ============================================================ */
+#screen-result {
+  background: #1a1228;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.result-text {
+  font-size: 5rem;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 4px 4px 16px rgba(0, 0, 0, 0.8);
+}
+
+/* ============================================================
+   Pokemon Tournament — New Screens
+   ============================================================ */
+
+/* ── Starter Select ────────────────────────────────────────── */
+#screen-starter {
+  background: #0d1a2e;
+  display: none;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.starter-left {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  flex-shrink: 0;
+  border-right: 1px solid #1a3060;
+  padding: 16px 12px;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.starter-right {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dex-info-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2a4060;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── Dex Info Panel ─────────────────────────────────────────── */
+.dex-info-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.dex-info-sprite-wrap { flex-shrink: 0; }
+.dex-info-sprite { display: block; image-rendering: pixelated; }
+.dex-info-meta { display: flex; flex-direction: column; gap: 4px; }
+.dex-info-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #e8d080;
+  letter-spacing: 0.05em;
+}
+.dex-info-id { font-size: 0.75rem; color: #4a6080; }
+.dex-info-types { display: flex; gap: 4px; margin-top: 2px; }
+
+.dex-info-section-title {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #4a7090;
+  letter-spacing: 0.12em;
+  margin: 14px 0 6px;
+}
+
+.dex-evo-chain {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.dex-evo-badge {
+  background: #0f2040;
+  border: 1px solid #2a4a6a;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  color: #90b8d8;
+}
+.dex-evo-badge.selected { border-color: #c8a227; color: #e8d080; }
+.dex-evo-arrow { color: #2a4060; font-size: 0.8rem; }
+.dex-evo-level { font-size: 0.65rem; color: #3a6080; }
+
+.dex-stage-block { margin-bottom: 12px; }
+.dex-stage-name {
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #c8a227;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #1a3050;
+}
+.dex-move-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid #0f1e30;
+  font-size: 0.7rem;
+}
+.dex-move-row-required { opacity: 0.8; background: #0a1a14; }
+.dex-move-req { font-size: 0.55rem; background: #1a3a28; color: #4a9868; border-radius: 3px; padding: 1px 3px; margin-left: 3px; }
+.dex-move-lv { color: #4a6888; width: 28px; flex-shrink: 0; text-align: right; }
+.dex-move-name { color: #c8d8e8; flex: 0 0 100px; }
+.dex-move-type {
+  font-size: 0.6rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: bold;
+  flex-shrink: 0;
+  width: 52px;
+  text-align: center;
+}
+.dex-move-stat { color: #5a7898; width: 36px; flex-shrink: 0; font-size: 0.65rem; }
+.dex-move-hitmap { flex-shrink: 0; }
+.dex-move-hitmap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 6px);
+  grid-template-rows: repeat(3, 6px);
+  gap: 1px;
+}
+.dex-hm-cell {
+  width: 6px; height: 6px;
+  background: #0f1e2e;
+  border-radius: 1px;
+}
+.dex-hm-cell.hit { background: #c8a227; }
+.dex-hm-cell.self { background: #2a6090; }
+
+.dex-no-moves { color: #2a4060; font-size: 0.7rem; font-style: italic; padding: 4px 0; }
+
+.btn-go {
+  margin-top: 20px;
+  align-self: flex-start;
+  background: #c8a227;
+  color: #0d1a2e;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 32px;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-go:hover { background: #e8c040; transform: translateY(-1px); }
+
+/* ── Pokédex Select Screen ─────────────────────────────────── */
+.dex-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.dex-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #c8a227;
+  letter-spacing: 0.1em;
+}
+
+.dex-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.dex-tab {
+  background: #1a2540;
+  border: 2px solid #3a5a8a;
+  border-radius: 6px;
+  color: #7090b0;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.dex-tab.active {
+  border-color: #c8a227;
+  color: #c8a227;
+}
+
+.dex-scroll {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.dex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 6px;
+  padding: 4px 8px;
+}
+
+.dex-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: default;
+  border-radius: 6px;
+  padding: 4px 2px;
+  transition: background 0.12s;
+}
+
+.dex-cell.caught {
+  cursor: pointer;
+}
+
+.dex-cell.caught:hover, .dex-cell.evo-unlocked:hover, .dex-cell.starter:hover {
+  background: #1e3050;
+}
+
+.dex-cell.dex-selected {
+  background: #1a3a5a;
+  outline: 2px solid #c8a227;
+  outline-offset: -2px;
+}
+
+.dex-cell.evo-unlocked {
+  cursor: pointer;
+}
+
+.dex-cell.evo-unlocked:hover {
+  background: #1e2a40;
+}
+
+.dex-cell.evo-unlocked .dex-portrait {
+  outline: 1px solid #3a5060;
+}
+
+.dex-cell.evolved {
+  opacity: 0.45;
+}
+
+.dex-portrait {
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #111a2e;
+  flex-shrink: 0;
+}
+
+.dex-sprite {
+  position: relative;
+  top: 3px;
+  left: 3px;
+  width: 50px;
+  height: 50px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.dex-num {
+  font-size: 0.5rem;
+  color: #556;
+  font-family: monospace;
+  line-height: 1;
+}
+
+.dex-cell.caught .dex-num,
+.dex-cell.evo-unlocked .dex-num {
+  color: #8090a8;
+}
+
+/* Starter screen legacy */
+.starter-header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #c8a227;
+  letter-spacing: 0.1em;
+}
+
+.starter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  max-width: 640px;
+}
+
+.starter-card {
+  background: #1a2a3a;
+  border: 2px solid #2a4a6a;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  gap: 8px;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.starter-card:hover {
+  border-color: #c8a227;
+  transform: scale(1.04);
+}
+
+.starter-portrait {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.starter-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.starter-name {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.starter-types {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.type-badge {
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+
+/* ── Card type badge (in card-img area) ─────────────────────── */
+.card-type-badge {
+  font-size: 0.55rem;
+  font-weight: bold;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 3px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
+.card-img { position: relative; }
+
+/* ── Map Screen ─────────────────────────────────────────────── */
+#screen-map {
+  background: #0a1020;
+  display: none;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: #1a1a2e;
+  border-bottom: 2px solid #c8a227;
+  flex-shrink: 0;
+}
+
+.map-floor-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #c8a227;
+  letter-spacing: 0.1em;
+}
+
+.map-money-label {
+  font-size: 1rem;
+  color: #88dd88;
+  font-weight: bold;
+}
+
+.map-hdr-btn {
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  letter-spacing: 0.05em;
+}
+
+.btn-red {
+  background: linear-gradient(180deg, #a02020 0%, #701010 100%);
+  color: #fff;
+  border: 2px solid #c84040;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+  transition: filter 0.15s;
+}
+
+.btn-red:hover { filter: brightness(1.2); }
+
+.map-content {
+  display: flex;
+  flex: 1;
+  gap: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.map-sidebar {
+  width: 240px;
+  background: #10162a;
+  border-left: 2px solid #2a3a5a;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 10px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.map-room-title {
+  font-size: 0.75rem;
+  color: #c8a227;
+  font-weight: bold;
+}
+
+.map-choose-label {
+  font-size: 0.65rem;
+  color: #aaa;
+}
+
+.map-room-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-room-choice {
+  background: #1a2a3a;
+  color: #fff;
+  border: 1px solid #3a5a7a;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: uppercase;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.btn-room-choice:hover {
+  background: #2a3a5a;
+  border-color: #c8a227;
+}
+
+.map-no-choices {
+  font-size: 0.7rem;
+  color: #666;
+  font-style: italic;
+}
+
+.map-team-panel {
+  border-top: 1px solid #2a3a5a;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.map-team-label {
+  font-size: 0.65rem;
+  color: #888;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.map-team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-team-entry {
+  background: #1a2a3a;
+  border: 1px solid #2a3a5a;
+  padding: 5px 8px;
+  font-size: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.map-team-entry.active {
+  border-color: #c8a227;
+  background: #1a2a1a;
+}
+
+.map-team-entry.fainted {
+  opacity: 0.5;
+}
+
+.map-team-name {
+  color: #fff;
+  font-weight: bold;
+}
+
+.map-team-hp {
+  color: #aaa;
+  font-size: 0.6rem;
+}
+
+.map-team-hpbar {
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+/* ── Catch Screen ────────────────────────────────────────────── */
+#screen-catch {
+  background: #0d1a2e;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.catch-header {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #c8a227;
+  letter-spacing: 0.1em;
+}
+
+.catch-body {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.catch-portrait {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 2px solid #3a5a7a;
+  background: #1a1a2e;
+}
+
+.catch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.catch-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.catch-types {
+  display: flex;
+  gap: 4px;
+}
+
+.catch-rewards {
+  font-size: 0.85rem;
+  color: #88dd88;
+}
+
+.catch-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ── Event Screen ─────────────────────────────────────────────── */
+#screen-event {
+  background: #1a1228;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px;
+}
+
+/* ── Learn Move Screen ──────────────────────────────────────── */
+.learn-move-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #c8a227;
+  text-align: center;
+  margin-bottom: 4px;
+  padding: 0 16px;
+}
+.learn-move-hint {
+  font-size: 0.72rem;
+  color: #5070a0;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.learn-move-new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.learn-move-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: #c8a227;
+  font-weight: bold;
+}
+.learn-move-new-card {
+  transform: scale(0.85);
+  transform-origin: top center;
+}
+.learn-move-arrow {
+  font-size: 0.68rem;
+  color: #3a5070;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.learn-move-current-list {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.learn-card-choice {
+  cursor: pointer;
+  transform: scale(0.8);
+  transform-origin: top center;
+  transition: transform 0.15s, filter 0.15s;
+}
+.learn-card-choice:hover {
+  transform: scale(0.9);
+  filter: brightness(1.2);
+}
+
+/* ── Release Screen ──────────────────────────────────────────── */
+.release-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #c8a227;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.release-hint {
+  font-size: 0.8rem;
+  color: #6080a0;
+  margin-bottom: 16px;
+}
+
+.release-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.release-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0d1b2e;
+  border: 1px solid #1e3050;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  position: relative;
+}
+
+.release-card:hover {
+  background: #1a2a40;
+  border-color: #e05050;
+}
+
+.release-card canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.release-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.release-card-name {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #c8d8f0;
+}
+
+.release-card-sub {
+  font-size: 0.7rem;
+  color: #4a6080;
+}
+
+.release-card-hp {
+  height: 4px;
+  background: #0a1020;
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.release-card-hp-bar {
+  height: 100%;
+  border-radius: 2px;
+  background: #3a9a3a;
+  transition: width 0.2s;
+}
+
+.release-new-badge {
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #c8a227;
+  background: #2a2000;
+  border: 1px solid #c8a227;
+  border-radius: 3px;
+  padding: 1px 4px;
+  flex-shrink: 0;
+}
+
+/* ── Evolution Screen ─────────────────────────────────────────── */
+.evo-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #c8a227;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+
+.evo-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin: 16px 0;
+}
+
+.evo-poke {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.evo-poke canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: #111a2e;
+  border-radius: 8px;
+}
+
+.evo-poke-name {
+  font-size: 0.85rem;
+  color: #c8d8f0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.evo-arrow-big {
+  font-size: 2.5rem;
+  color: #c8a227;
+  line-height: 1;
+}
+
+.evo-msg {
+  font-size: 0.9rem;
+  color: #8090a8;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.evo-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.event-icon {
+  font-size: 3rem;
+}
+
+.event-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #c8a227;
+  letter-spacing: 0.08em;
+}
+
+.event-body {
+  font-size: 0.95rem;
+  color: #ddd;
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.6;
+  text-transform: none;
+}
+
+.event-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.shop-money {
+  font-size: 1rem;
+  color: #88dd88;
+  font-weight: bold;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.shop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 280px;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2a2a3a;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  gap: 12px;
+}
+
+.shop-item-name {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  flex: 1;
+}
+
+.shop-item-cost {
+  color: #88dd88;
+  font-size: 0.8rem;
+  font-weight: bold;
+  width: 50px;
+  text-align: right;
+}
+
+/* ── Game Over Screen ─────────────────────────────────────────── */
+#screen-gameover {
+  background: #1a0000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.gameover-text {
+  font-size: 5rem;
+  font-weight: bold;
+  color: #cc2222;
+  text-shadow: 4px 4px 16px rgba(0,0,0,0.8);
+}
+
+.gameover-sub {
+  font-size: 1rem;
+  color: #aaa;
+}
+
+/* ── Victory Screen ───────────────────────────────────────────── */
+#screen-victory {
+  background: #0a1a0a;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.victory-sub {
+  font-size: 1rem;
+  color: #88dd88;
+}
+
+/* ── Result Screen (kept for legacy) ─────────────────────────── */
+#screen-result {
+  background: #1a1228;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.result-text {
+  font-size: 5rem;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 4px 4px 16px rgba(0,0,0,0.8);
+}
+
+/* ── Map screen layout ──────────────────────────────────────── */
+#screen-map { flex-direction: column; align-items: stretch; }
+
+.map-header-hint {
+  font-size: 0.65rem;
+  color: #c8a227;
+  opacity: 0.7;
+  letter-spacing: 0.08em;
+}
+
+/* Wrapper that contains both the explore area and the corner minimap */
+.map-explore-wrap {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: #080812;
+}
+
+/* ── Explore Area (fullscreen navigation view) ──────────────── */
+.map-explore-area {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: grid;
+  /* 7 columns × 5 rows matching MAP_W / MAP_H */
+  grid-template-columns: repeat(7, 190px);
+  grid-template-rows: repeat(5, 115px);
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  align-content: center;
+  justify-content: center;
+}
+
+/* Individual explore cell */
+.explore-cell {
+  width: 190px;
+  height: 115px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+/* invisible placeholder for empty grid positions */
+.explore-cell-empty {
+  width: 190px;
+  height: 115px;
+  visibility: hidden;
+}
+
+.explore-cell.explore-current {
+  border: 3px solid #ffffff;
+}
+
+.explore-cell.explore-can-enter {
+  border: 3px solid #ffdd55;
+  cursor: pointer;
+}
+
+.explore-cell.explore-can-enter:hover {
+  border-color: #ffee88;
+  filter: brightness(1.15);
+}
+
+.explore-cell.explore-visited {
+  border: 1px solid #444;
+}
+
+.explore-cell.explore-adj-unvisited {
+  border: 1px solid #333;
+  opacity: 0.6;
+}
+
+/* room icon text in explore view */
+.explore-icon {
+  font-size: 1.4rem;
+  color: rgba(255,255,255,0.9);
+  pointer-events: none;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.explore-adj-unvisited .explore-icon {
+  color: rgba(255,255,255,0.5);
+}
+
+/* door connectors in explore view */
+.explore-door {
+  position: absolute;
+  background: #666;
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+.explore-door.door-n { width: 16px; height: 10px; top: -10px;   left: 50%; transform: translateX(-50%); }
+.explore-door.door-s { width: 16px; height: 10px; bottom: -10px; left: 50%; transform: translateX(-50%); }
+.explore-door.door-e { width: 10px; height: 16px; right: -10px;  top: 50%;  transform: translateY(-50%); }
+.explore-door.door-w { width: 10px; height: 16px; left: -10px;   top: 50%;  transform: translateY(-50%); }
+
+/* Sprite overlay inside current explore cell */
+.explore-sprite-wrap {
+  position: absolute;
+  width: 54px;
+  height: 64px;
+  overflow: hidden;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 400ms ease;
+  z-index: 3;
+}
+
+/* ── Team Strip ──────────────────────────────────────────────── */
+.map-team-strip {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #10162a;
+  border-top: 2px solid #2a3a5a;
+  flex-shrink: 0;
+  min-height: 52px;
+  align-items: center;
+}
+
+.map-strip-poke {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  background: #1a2a3a;
+  border: 1px solid #2a3a5a;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+.map-strip-poke.active  { border-color: #c8a227; background: #1a2a1a; }
+.map-strip-poke.fainted { opacity: 0.45; }
+
+.map-strip-name { font-size: 0.65rem; font-weight: bold; color: #fff; }
+.map-strip-hp   { font-size: 0.55rem; color: #aaa; }
+
+.map-strip-bar {
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+/* ── 카드 단축키 뱃지 ────────────────────────────────────────── */
+.card-shortcut-badge {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  background: rgba(0,0,0,0.70);
+  color: #fff;
+  font-size: 0.60rem;
+  font-family: monospace, monospace;
+  padding: 1px 4px;
+  border-radius: 3px;
+  z-index: 10;
+  pointer-events: none;
+  line-height: 1.2;
+}
+
+/* ── 설정 버튼 (우측 상단 고정) ──────────────────────────────── */
+#btn-settings {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+#btn-settings:hover { background: rgba(60,100,160,0.8); }
+
+/* ── 설정 패널 ───────────────────────────────────────────────── */
+#settings-panel {
+  position: fixed;
+  top: 52px;
+  right: 10px;
+  z-index: 9998;
+  background: #1a2a3a;
+  border: 1px solid #3a5a8a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  min-width: 190px;
+  color: #fff;
+  font-family: monospace, monospace;
+  font-size: 0.8rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.settings-row:last-child { margin-bottom: 0; }
+#settings-volume-slider {
+  flex: 1;
+  accent-color: #3399ff;
+  cursor: pointer;
+}
+#settings-mute-btn {
+  background: #2a3a5a;
+  color: #fff;
+  border: 1px solid #3a5a8a;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+#settings-mute-btn:hover { background: #3a5a8a; }
+
+/* ============================================================
+   cycle-015: 카드 디자인 전면 개편 (card-item 기반)
+   ============================================================ */
+
+/* 카드 기본 */
+.card-item {
+  position: relative;
+  aspect-ratio: 1080 / 1496;
+  min-width: 132px;
+  min-height: 180px;
+  box-sizing: border-box;
+  padding: 22px 8px 8px 8px;
+  background: #1a2540;
+  border: 1px solid #3a5a8a;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: monospace;
+  overflow: visible;
+  transition: border-color 0.15s;
+}
+
+.card-item:hover {
+  border-color: #c8a227;
+}
+
+.card-item.dimmed {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 단축키 뱃지 */
+.card-item .card-shortcut-badge {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffcc00;
+  color: #000;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 0;
+}
+
+/* 기술명 */
+.card-move-name {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 60px);
+  color: #e0e8ff;
+}
+
+/* 타입 뱃지 (card-item 안) */
+.card-item .card-type-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: #3a5a8a;
+  color: #fff;
+  left: auto;
+}
+
+/* 하단 좌측: PW/EN/DM */
+.card-stats-block {
+  font-size: 10px;
+  color: #aac0e0;
+  line-height: 1.3;
+  width: 66%;
+}
+
+.card-stats-block .pw-en-row {
+  display: flex;
+  gap: 6px;
+}
+
+.card-stats-block .dm-row {
+  color: #ff6666;
+  padding-left: 4px;
+}
+
+/* 하단 우측: hitmap */
+.card-hitmap {
+  bottom: 6px;
+  right: 6px;
+  display: grid;
+  grid-template-columns: repeat(3, 12px);
+  grid-template-rows: repeat(3, 12px);
+  gap: 1px;
+}
+
+.card-hitmap .hm-cell {
+  width: 12px;
+  height: 12px;
+  background: #0d1828;
+  border-radius: 1px;
+}
+
+.card-hitmap .hm-cell.hit {
+  background: #ff4444;
+}
+
+.card-hitmap .hm-cell.self {
+  background: #0d1828;
+}
+
+/* MOVE 카드 */
+.card-item.card-move {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-move-direction-icon {
+  font-size: 30px;
+  line-height: 1;
+}
+
+
+.card-swap-portrait {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* cycle-016: 카드 중간 박스 구역 */
+.card-middle-box {
+  position: absolute;
+  top: 28px;
+  left: 4px;
+  right: 4px;
+  bottom: 46px;
+  border: 1px solid #3a5a8a;
+  border-radius: 5px;
+  background: #111a2e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ============================================================
+   cycle-015: 슬롯 영역 UI 개편
+   ============================================================ */
+
+#slot-area {
+  background: #0d1020;
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+#slot-main-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+
+#selected-slots {
+  display: flex;
+  gap: 8px;
+}
+
+.selected-slot {
+  aspect-ratio: 1080 / 1496;
+  width: 132px;
+  flex-shrink: 0;
+  border: 2px dashed #555;
+  border-radius: 6px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
+
+.selected-slot.empty-slot {
+  align-items: center;
+  justify-content: center;
+}
+
+.selected-slot:not(.empty-slot) {
+  border: none;
+}
+
+.selected-slot.slot-swap-locked {
+  border: 2px solid #5a1010;
+  background: #1a0808;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.selected-slot .card-item {
+  width: 132px;
+  flex-shrink: 0;
+  min-width: unset;
+  min-height: unset;
+  box-sizing: border-box;
+  cursor: default;
+}
+
+/* cycle-016: card-grid-wrap 하단 MOVE/SWAP 구역 */
+#card-bottom-zone {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 8px;
+  padding: 4px 0;
+}
+
+#move-card-zone {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.move-slot {
+  width: 132px;
+  aspect-ratio: 1080 / 1496;
+  min-height: 180px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #666;
+  position: relative;
+  overflow: visible;
+}
+
+.move-slot .card-item {
+  width: 132px;
+  min-width: unset;
+  min-height: unset;
+  aspect-ratio: 1080 / 1496;
+}
+
+#swap-card-zone {
+  display: flex;
+  gap: 10px;
+}
+
+.swap-slot {
+  width: 132px;
+  aspect-ratio: 1080 / 1496;
+  min-height: 180px;
+  border: 2px dashed #555;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  position: relative;
+  overflow: visible;
+}
+
+/* FIELD 미니그리드 1.5× 확대, 우측 정렬 */
+#field-mini-grid {
+  align-self: baseline;
+}
+
+/* slot-actions: CONTINUE/CLEAR 세로 정렬 */
+#slot-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+
+#slot-actions .btn-gold {
+  width: 120px;
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+}
+
+/* cycle-016: 상대 덱 오버레이 (q 키) */
+#enemy-deck-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#enemy-deck-overlay .overlay-title {
+  color: #c8a227;
+  font-family: monospace;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.enemy-deck-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.enemy-deck-grid .card-item {
+  min-width: 90px;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* cycle-016: reveal overlay 카드 크기 30% 크게 */
+#card-reveal-overlay .flip-card {
+  min-width: 143px;
+}
+
+#card-reveal-overlay .flip-card .card-item {
+  min-width: 143px;
+}
